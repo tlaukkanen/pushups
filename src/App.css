@@ -1,0 +1,12 @@
+body {
+  background-color: #faf3e0;
+}
+
+
+.App-link {
+  color: #61dafb;
+}
+
+button {
+  font-size: calc(10px + 2vmin);
+}
