@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, CardContent, makeStyles, Typography } from "@material-ui/core"
+import { Card, CardContent, Divider, Grid, makeStyles, Typography } from "@material-ui/core"
 import { 
   Timeline, TimelineConnector, TimelineContent,
   TimelineDot, TimelineItem, TimelineOppositeContent,
@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   dateContent: {
     width: '200px',
   },
+  pushupList: {
+    padding: theme.spacing(2),
+  }
 }))
 
 export default function DayTimeline(props) {
@@ -34,15 +37,48 @@ export default function DayTimeline(props) {
     dayjs(dayStamp, 'YYYYMMDD').format('DD/MM/YYYY')
   )
 
-  const formatRelativeDay = (dayStamp) => (
-    dayjs(dayStamp, 'YYYYMMDD').fromNow()
-  )
+  const formatRelativeDay = (dayStamp) => {
+    const now = dayjs()
+    const day = dayjs(dayStamp, 'YYYYMMDD')
+    const diffDays = now.diff(day, 'day')
+    if(diffDays==0) {
+      return "Today"
+    } else if(diffDays==1) {
+      return "Yesterday"
+    } else {
+      return `${diffDays} days ago`
+    }
+  }
 
   return (
+<>
+{days.map((day) => (
+  <div key={day}>
+  <Divider />
+  <Grid container className={classes.pushupList} spacing={0}>
+    <Grid item xs={4}>
+    {formatDay(day)}
+    <br/>
+    {dayjs(day, 'YYYYMMDD').format('dddd')}
+    </Grid>
+    <Grid item xs={8}>
+      <Typography variant="h6" component="h4">
+        Best <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> per set
+      </Typography>
+      <Typography variant="body2">
+        <b>{data[day] ? data[day].length : 0}</b> sets
+        <br/>
+        <b>{data[day] ? data[day].reduce((a,b) => a+b,0) : 0}</b> total
+      </Typography>
+    </Grid>
+  </Grid>
+  </div>
+))}
+</>
+/*
     <Timeline
     >
       {days.map((day) => (
-        data[day] &&
       <TimelineItem key={day}>
         <TimelineOppositeContent
           className={classes.dateContent}
@@ -50,7 +86,7 @@ export default function DayTimeline(props) {
           <Typography color="textSecondary" gutterBottom>
             {formatDay(day)}
             <br/>
-            {formatRelativeDay(day)}
+            {dayjs(day, 'YYYYMMDD').format('dddd')}
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator>
@@ -59,16 +95,19 @@ export default function DayTimeline(props) {
         </TimelineSeparator>
         <TimelineContent>
           <Typography variant="h6" component="h4">
-            {data[day] && data[day].reduce((a,b) => a+b,0)} total
+            Best <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> per set
           </Typography>
           <Typography variant="body2">
-            <b>{data[day].length}</b> sets - max <b>{Math.max.apply(Math, data[day])}</b> per set
+            <b>{data[day] ? data[day].length : 0}</b> sets
+            <br/>
+            <b>{data[day] ? data[day].reduce((a,b) => a+b,0) : 0}</b> total
           </Typography>
         </TimelineContent>
       </TimelineItem>
         
       ))}
-    </Timeline>        
+    </Timeline>   
+    */     
   )
 }
 
@@ -77,12 +116,7 @@ DayTimeline.defaultProps = {
 }
 
 DayTimeline.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.objectOf({
-      date: PropTypes.string,
-      sets: PropTypes.arrayOf(
-        PropTypes.number
-      ),
-    }),
+  data: PropTypes.objectOf(
+    PropTypes.arrayOf(PropTypes.number),
   ),
 }

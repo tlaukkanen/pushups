@@ -33,16 +33,12 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
   page: {
-    margin: theme.spacing(1),
-  },
-  timeline: {
-    width: '400px',
-    height: '400px',
+    margin: theme.spacing(0),
   },
   fab: {
     position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
   },
 }))
 
@@ -81,6 +77,7 @@ function App() {
     setPushups(newPushups)
 
     setEntryDialogOpen(false)
+    setPushupCount(0)
   }
 
   return (
@@ -112,7 +109,7 @@ function App() {
             id="numberOfPushups"
             label="Number of pushups"
             type="number"
-            value={pushupCount}
+            value={pushupCount!=0 ? pushupCount : ''}
             onChange={(e) => setPushupCount(parseInt(e.target.value))}
           />
         </DialogContent>
