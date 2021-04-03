@@ -26,11 +26,11 @@ export default function DayTimeline(props) {
   const { data } = props
   const days = [
     dayjs().format('YYYYMMDD'),
-    dayjs().subtract(1, 'day'),
-    dayjs().subtract(2, 'day'),
-    dayjs().subtract(3, 'day'),
-    dayjs().subtract(4, 'day'),
-    dayjs().subtract(5, 'day'),
+    dayjs().subtract(1, 'day').format('YYYYMMDD'),
+    dayjs().subtract(2, 'day').format('YYYYMMDD'),
+    dayjs().subtract(3, 'day').format('YYYYMMDD'),
+    dayjs().subtract(4, 'day').format('YYYYMMDD'),
+    dayjs().subtract(5, 'day').format('YYYYMMDD'),
   ]
 
   const formatDay = (dayStamp) => (
