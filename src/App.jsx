@@ -57,6 +57,13 @@ function App() {
     }
   }, [setPushups])
 
+  const handleEnter = (e) => {
+    console.log(e.key)
+    if (e.key === 'Enter') {
+      handleEntry()
+    }
+  }
+
   const handleEntry = () => {
     const dayStamp = dayjs().format('YYYYMMDD')
 
@@ -111,6 +118,7 @@ function App() {
             type="number"
             value={pushupCount!=0 ? pushupCount : ''}
             onChange={(e) => setPushupCount(parseInt(e.target.value))}
+            onKeyPress={(e) => handleEnter(e)}
           />
         </DialogContent>
         <DialogActions>
