@@ -1,4 +1,9 @@
-import { Button, createMuiTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Grid, IconButton, makeStyles, MuiThemeProvider, Paper, TextField } from '@material-ui/core'
+import {
+  Button, createMuiTheme, Dialog, DialogActions,
+  DialogContent, DialogContentText, DialogTitle,
+  Fab, Grid, IconButton, makeStyles, MuiThemeProvider,
+  Paper, TextField,
+} from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import './App.css'
@@ -108,7 +113,7 @@ function App() {
       <Dialog open={entryDialogOpen} onClose={() => setEntryDialogOpen(false)}>
         <DialogContent>
           <DialogContentText>
-            Enter number of pushups done in one set.
+            Enter number of pushups done in one rep.
           </DialogContentText>
           <TextField
             autoFocus
