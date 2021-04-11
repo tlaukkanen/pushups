@@ -61,15 +61,24 @@ export default function DayTimeline(props) {
     <br/>
     {dayjs(day, 'YYYYMMDD').format('dddd')}
     </Grid>
-    <Grid item xs={8}>
-      <Typography variant="h6" component="h4">
-        Best <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> per set
+    <Grid item xs={5}>
+    
+      <Typography variant="body2">
+      <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> max per set
       </Typography>
       <Typography variant="body2">
-        <b>{data[day] ? data[day].length : 0}</b> sets
-        <br/>
-        <b>{data[day] ? data[day].reduce((a,b) => a+b,0) : 0}</b> total
+        <b>{data[day] ? data[day].length : 0}</b>  sets
       </Typography>
+    </Grid>
+    <Grid item xs={3}>
+      <Card variant="elevation">
+        <CardContent >
+        <Typography variant="h4">
+          {data[day] ? data[day].reduce((a,b) => a+b,0) : 0}
+        </Typography>
+         total
+        </CardContent>
+      </Card>
     </Grid>
   </Grid>
   </div>

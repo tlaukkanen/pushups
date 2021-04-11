@@ -14,20 +14,32 @@ Theme
 #1e212d
 */
 
+/*
+Theme v2
+#E5EDB8
+#ADB85F
+#837B47
+#5A3D31
+#300018
+*/
+
+
+
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#faf3e0',
-      main: '#eabf9f',
-      dark: '#b68973',
+      light: '#E5EDB8',
+      main: '#ADB85F',
+      dark: '#300018',
       //contrastText: 
     },
     secondary: {
-      light: '#eabf9f',
-      main: '#eabf9f',
-      
-
+      light: '#E5EDB8',
+      main: '#ADB85F',
     },
+    text: {
+      secondary: '#5A3D31',
+    }
   }
 })
 
@@ -104,32 +116,30 @@ function App() {
             </Fab>
           </Grid>
         </Grid>
+        <Dialog open={entryDialogOpen} onClose={() => setEntryDialogOpen(false)}>
+          <DialogContent>
+            <DialogTitle>How many push ups?</DialogTitle>
+            <TextField
+              autoFocus
+              fullWidth
+              id="numberOfPushups"
+              label="Number of pushups"
+              type="number"
+              value={pushupCount!=0 ? pushupCount : ''}
+              onChange={(e) => setPushupCount(parseInt(e.target.value))}
+              onKeyPress={(e) => handleEnter(e)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setEntryDialogOpen(false)} color="secondary">
+              Cancel
+            </Button>
+            <Button onClick={handleEntry} color="primary" variant="outlined">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
       </MuiThemeProvider>
-      <Dialog open={entryDialogOpen} onClose={() => setEntryDialogOpen(false)}>
-        <DialogContent>
-          <DialogContentText>
-            Enter number of pushups done in one set.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            fullWidth
-            id="numberOfPushups"
-            label="Number of pushups"
-            type="number"
-            value={pushupCount!=0 ? pushupCount : ''}
-            onChange={(e) => setPushupCount(parseInt(e.target.value))}
-            onKeyPress={(e) => handleEnter(e)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEntryDialogOpen(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleEntry} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   )
 }
