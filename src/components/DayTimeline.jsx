@@ -71,54 +71,26 @@ export default function DayTimeline(props) {
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Card variant="elevation">
-        <CardContent >
+      {index === 0 &&
+        <Card variant="elevation">
+          <CardContent >
+            <Typography variant="h4">
+              {data[day] ? data[day].reduce((a,b) => a+b,0) : 0}
+            </Typography>
+            <span>total</span>
+          </CardContent>
+        </Card>
+      }
+      {index > 0 &&
         <Typography variant="h4">
           {data[day] ? data[day].reduce((a,b) => a+b,0) : 0}
         </Typography>
-        {index === 0 && 
-	  <>total</>
-	}
-        </CardContent>
-      </Card>
+      }
     </Grid>
   </Grid>
   </div>
 ))}
 </>
-/*
-    <Timeline
-    >
-      {days.map((day) => (
-      <TimelineItem key={day}>
-        <TimelineOppositeContent
-          className={classes.dateContent}
-        >
-          <Typography color="textSecondary" gutterBottom>
-            {formatDay(day)}
-            <br/>
-            {dayjs(day, 'YYYYMMDD').format('dddd')}
-          </Typography>
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot/>
-          <TimelineConnector/>
-        </TimelineSeparator>
-        <TimelineContent>
-          <Typography variant="h6" component="h4">
-            Best <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> per set
-          </Typography>
-          <Typography variant="body2">
-            <b>{data[day] ? data[day].length : 0}</b> sets
-            <br/>
-            <b>{data[day] ? data[day].reduce((a,b) => a+b,0) : 0}</b> total
-          </Typography>
-        </TimelineContent>
-      </TimelineItem>
-        
-      ))}
-    </Timeline>   
-    */     
   )
 }
 
