@@ -55,13 +55,18 @@ export default function DayTimeline(props) {
 {days.map((day, index) => (
   <div key={day}>
   <Divider />
-  <Grid container className={classes.pushupList} spacing={0}>
-    <Grid item xs={4}>
+  <Grid 
+    container 
+    className={classes.pushupList} 
+    spacing={0}
+    justify="space-evenly"
+  >
+    <Grid  xs={3}>
     {formatDay(day)}
     <br/>
     {dayjs(day, 'YYYYMMDD').format('dddd')}
     </Grid>
-    <Grid item xs={5}>
+    <Grid xs={3}>
     
       <Typography variant="body2">
       <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> max per set
@@ -70,7 +75,7 @@ export default function DayTimeline(props) {
         <b>{data[day] ? data[day].length : 0}</b>  sets
       </Typography>
     </Grid>
-    <Grid item xs={3}>
+    <Grid xs={3}>
       {index === 0 &&
         <Card variant="elevation">
           <CardContent >
