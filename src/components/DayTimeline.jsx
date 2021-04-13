@@ -52,7 +52,7 @@ export default function DayTimeline(props) {
 
   return (
 <>
-{days.map((day) => (
+{days.map((day, index) => (
   <div key={day}>
   <Divider />
   <Grid container className={classes.pushupList} spacing={0}>
@@ -76,7 +76,9 @@ export default function DayTimeline(props) {
         <Typography variant="h4">
           {data[day] ? data[day].reduce((a,b) => a+b,0) : 0}
         </Typography>
-         total
+        {index === 0 && 
+	  <>total</>
+	}
         </CardContent>
       </Card>
     </Grid>
