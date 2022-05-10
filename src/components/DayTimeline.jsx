@@ -59,14 +59,14 @@ export default function DayTimeline(props) {
     container 
     className={classes.pushupList} 
     spacing={0}
-    justify="space-evenly"
+    justifyContent="space-evenly"
   >
-    <Grid  xs={3}>
+    <Grid item xs={3}>
     {formatDay(day)}
     <br/>
     {dayjs(day, 'YYYYMMDD').format('dddd')}
     </Grid>
-    <Grid xs={3}>
+    <Grid item xs={3}>
     
       <Typography variant="body2">
       <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> max per set
@@ -75,7 +75,7 @@ export default function DayTimeline(props) {
         <b>{data[day] ? data[day].length : 0}</b>  sets
       </Typography>
     </Grid>
-    <Grid xs={3}>
+    <Grid item xs={3}>
       {index === 0 &&
         <Card variant="elevation">
           <CardContent >
@@ -104,7 +104,5 @@ DayTimeline.defaultProps = {
 }
 
 DayTimeline.propTypes = {
-  data: PropTypes.objectOf(
-    PropTypes.arrayOf(PropTypes.number),
-  ),
+  data: PropTypes.arrayOf(PropTypes.number),
 }
