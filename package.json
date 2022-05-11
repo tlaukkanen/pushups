@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@tensorflow-models/pose-detection": "^2.0.0",
+    "@tensorflow-models/posenet": "^2.2.2",
     "@tensorflow/tfjs-backend-webgl": "^3.16.0",
     "@tensorflow/tfjs-core": "^3.16.0",
     "dayjs": "^1.11.2",
