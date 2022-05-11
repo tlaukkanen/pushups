@@ -55,7 +55,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   const runPoseDetector = async () => {
     setInterval(() => {
       detect()
-    }, 1200);
+    }, 200);
   }
 
   const calculateHandAngle = (shoulderPos, elbowPos, wristPos) => {
@@ -117,9 +117,9 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
     const angleLeft = calculateHandAngle(leftShoulder, leftElbow, leftWrist);
     const angleRight = calculateHandAngle(rightShoulder, rightElbow, rightWrist);
-    console.log(JSON.stringify(poses))
-    console.log('angleLeft: ' + angleLeft + '/' + leftScoreTotal)
-    console.log('angleRight: ' + angleRight + '/' + rightScoreTotal)
+    //console.log(JSON.stringify(poses))
+    //console.log('angleLeft: ' + angleLeft + '/' + leftScoreTotal)
+    //console.log('angleRight: ' + angleRight + '/' + rightScoreTotal)
 
     if(((angleLeft > 130 && leftScoreTotal > 1.8) || 
         (angleRight > 130 && rightScoreTotal > 1.8)) && 
