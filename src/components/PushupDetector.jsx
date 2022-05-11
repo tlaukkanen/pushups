@@ -4,9 +4,6 @@ import * as poseDetection from '@tensorflow-models/pose-detection'
 import '@tensorflow/tfjs-backend-webgl'
 import Webcam from 'react-webcam';
 
-const detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
-const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
-
 const GOING_DOWN = 0
 const GOING_UP = 1
 const phaseNames = ['GOING_DOWN', 'GOING_UP']
@@ -15,6 +12,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   //const [pushupCount, setPushupCount] = useState(0)
   const [pushUpPhase, setPushUpPhase] = useState(GOING_DOWN)
   const [aiReady, setAiReady] = useState(false)
+  const [detector, setDetector] = useState()
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const pushUpPhaseRef = useRef(GOING_DOWN)
@@ -84,9 +82,15 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     ctx.closePath();
   }
 
+  const initSetup = async () => {
+    const detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
+    const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
+    setDetector(detector)
+  }
+
   const detect = async () => {
     const webcam = webcamRef.current;
-    if(!webcam || webcam?.video?.readyState !== 4) {
+    if(!detector || !webcam || webcam?.video?.readyState !== 4) {
       return
     }
 
@@ -146,6 +150,13 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
   useEffect(() => {
     runPoseDetector()
+  }, [detector])
+
+  useEffect(() => {
+    initSetup()
+    return () => {
+      initSetup()
+    }
   }, [])
 
   return (
