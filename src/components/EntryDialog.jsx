@@ -35,7 +35,12 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
           onKeyPress={(e) => handleEnter(e)}
         />
         <Button onClick={() => setShowAi(!showAi)}>Show AI pushup counter</Button>
-        {showAi && <PushupDetector />}
+        {showAi && 
+          <PushupDetector
+            pushupCount={pushupCount}
+            setPushupCount={setPushupCount}
+          />
+        }
       </DialogContent>
       <DialogActions>
         <Button onClick={() => closeDialog()} color="secondary">
