@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import * as tf from '@tensorflow/tfjs'
+import * as tf from '@tensorflow/tfjs-core'
 import * as poseDetection from '@tensorflow-models/pose-detection'
 import '@tensorflow/tfjs-backend-webgl'
 import Webcam from 'react-webcam';
@@ -14,6 +14,7 @@ const phaseNames = ['GOING_DOWN', 'GOING_UP']
 const PushupDetector = ({setPushupCount, pushupCount}) => {
   //const [pushupCount, setPushupCount] = useState(0)
   const [pushUpPhase, setPushUpPhase] = useState(GOING_DOWN)
+  const [aiReady, setAiReady] = useState(false)
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const pushUpPhaseRef = useRef(GOING_DOWN)
@@ -53,6 +54,8 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   }  
 
   const runPoseDetector = async () => {
+    await tf.ready()
+    setAiReady(true)
     setInterval(() => {
       detect()
     }, 200);
@@ -147,7 +150,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
   return (
     <div>
-      <h1>Pushup Detector</h1>
+      <h1>Pushup Detector {!aiReady && ' - Loading...'}</h1>
       <h2>COUNT: {pushupCount} PHASE: {phaseNames[pushUpPhase]}</h2>
       <div id="camera" style={cameraContainerStyle}>
         <Webcam 
