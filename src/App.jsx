@@ -1,8 +1,8 @@
 import {
-  Button, createMuiTheme, Dialog, DialogActions,
+  Button, createMuiTheme, createTheme, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle,
   Fab, Grid, IconButton, makeStyles, MuiThemeProvider,
-  Paper, TextField,
+  Paper, TextField, Typography,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
@@ -10,6 +10,7 @@ import './App.css'
 import DayTimeline from './components/DayTimeline'
 import store from 'store'
 import dayjs from 'dayjs'
+import EntryDialog from './components/EntryDialog'
 
 /*
 Theme
@@ -30,7 +31,7 @@ Theme v2
 
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       light: '#E5EDB8',
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0),
   },
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: theme.spacing(3),
     right: theme.spacing(3),
   },
@@ -65,7 +66,6 @@ function App() {
   const [count, setCount] = useState(0)
   const [entryDialogOpen, setEntryDialogOpen] = useState(false)
   const [pushups, setPushups] = useState([])
-  const [pushupCount, setPushupCount] = useState(0)
 
   useEffect(() => {
     const data = store.get('data')
@@ -74,34 +74,19 @@ function App() {
     }
   }, [setPushups])
 
-  const handleEnter = (e) => {
-    console.log(e.key)
-    if (e.key === 'Enter') {
-      handleEntry()
-    }
-  }
-
-  const handleEntry = () => {
+  const handleEntry = (pushupCount) => {
     const dayStamp = dayjs().format('YYYYMMDD')
-
     let newPushups = {
       ...pushups
     }
-
     let dayData = newPushups[dayStamp]
     if(dayData==null) {
       dayData = []
     }
-
     dayData.push(pushupCount)
-
     newPushups[dayStamp] = dayData
-
     store.set('data', newPushups)
     setPushups(newPushups)
-
-    setEntryDialogOpen(false)
-    setPushupCount(0)
   }
 
   return (
@@ -109,41 +94,27 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <Grid container>
           <Grid item xs={12}>
+            <Typography variant='h6' style={{textAlign:'center'}}>Pushups Last 10 Days</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            
             <DayTimeline 
               data={pushups}
             />
-            <Fab
-              onClick={() => setEntryDialogOpen(true)}
-              color="primary"
-              className={classes.fab}
-            >
-              <AddIcon />
-            </Fab>
           </Grid>
         </Grid>
-        <Dialog open={entryDialogOpen} onClose={() => setEntryDialogOpen(false)}>
-          <DialogContent>
-            <DialogTitle>How many push ups?</DialogTitle>
-            <TextField
-              autoFocus
-              fullWidth
-              id="numberOfPushups"
-              label="Number of pushups"
-              type="number"
-              value={pushupCount!=0 ? pushupCount : ''}
-              onChange={(e) => setPushupCount(parseInt(e.target.value))}
-              onKeyPress={(e) => handleEnter(e)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setEntryDialogOpen(false)} color="secondary">
-              Cancel
-            </Button>
-            <Button onClick={handleEntry} color="primary" variant="outlined">
-              Add
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <Fab
+          onClick={() => setEntryDialogOpen(true)}
+          color="primary"
+          className={classes.fab}
+        >
+          <AddIcon />
+        </Fab>
+        <EntryDialog
+          entryDialogOpen={entryDialogOpen}
+          closeDialog={() => setEntryDialogOpen(false)}
+          handleEntry={(count) => handleEntry(count)}
+        />
       </MuiThemeProvider>
     </>
   )
