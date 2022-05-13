@@ -2,7 +2,7 @@ import {
   Button, createMuiTheme, createTheme, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle,
   Fab, Grid, IconButton, makeStyles, MuiThemeProvider,
-  Paper, TextField,
+  Paper, TextField, Typography,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0),
   },
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: theme.spacing(3),
     right: theme.spacing(3),
   },
@@ -94,18 +94,22 @@ function App() {
       <MuiThemeProvider theme={theme}>
         <Grid container>
           <Grid item xs={12}>
+            <Typography variant='h6' style={{textAlign:'center'}}>Pushups Last 10 Days</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            
             <DayTimeline 
               data={pushups}
             />
-            <Fab
-              onClick={() => setEntryDialogOpen(true)}
-              color="primary"
-              className={classes.fab}
-            >
-              <AddIcon />
-            </Fab>
           </Grid>
         </Grid>
+        <Fab
+          onClick={() => setEntryDialogOpen(true)}
+          color="primary"
+          className={classes.fab}
+        >
+          <AddIcon />
+        </Fab>
         <EntryDialog
           entryDialogOpen={entryDialogOpen}
           closeDialog={() => setEntryDialogOpen(false)}

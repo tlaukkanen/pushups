@@ -1,7 +1,7 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Grid, IconButton, makeStyles, TextField, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import PushupDetector from './PushupDetector'
-import CloseIcon from '@material-ui/icons/CheckCircleRounded'
+import CloseIcon from '@material-ui/icons/Close'
 
 const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
   const [pushupCount, setPushupCount] = useState(0)
@@ -28,13 +28,15 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
   }
 
   const aiCloseButtonStyle = {
-    position: 'absolute',
+    position: 'fixed',
     bottom: '0',
     left: '50%',
-    width: '80px',
-    height: '80px',
-    marginLeft: "-40px",
+    marginBottom: '5px',
+    //width: '80px',
+    //height: '80px',
+    marginLeft: "-100px",
     color: "#ffaa00",
+    width: '200px',
   }
 
   const aiContainerStyle = {
@@ -93,13 +95,19 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
           pushupCount={pushupCount}
           setPushupCount={setPushupCount}
         />
-        <IconButton
+        <Box 
+          justifyItems={'center'}
           style={aiCloseButtonStyle}
-          onClick={() => setShowAi(false)}
-          size="large"
         >
-          <CloseIcon fontSize="inherit" />
-        </IconButton>
+          <Fab            
+            onClick={() => setShowAi(false)}
+            style={{
+              color: "#ffaa00",
+            }}
+          >
+            <CloseIcon />
+          </Fab>
+        </Box>
       </div>
     </Dialog>
     </>
