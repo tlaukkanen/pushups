@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs-core'
 import * as poseDetection from '@tensorflow-models/pose-detection'
 import '@tensorflow/tfjs-backend-webgl'
 import Webcam from 'react-webcam';
+import { Typography } from '@material-ui/core';
 
 const GOING_DOWN = 0
 const GOING_UP = 1
@@ -23,33 +24,44 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
   const webcamstyle = {
     zindex: 9,
-    width: 460,
-    height: 346,
-    borderRadius: "20px",
     position: "absolute",
-    marginLeft: "auto",
-    marginRight: "auto",
-    textAlign: "center",
+    borderRadius: "5px",
+    width: "98%",
+    height: "98%",
+    top: "1%",
+    left: "1%",
+//    border: "1px solid red",
   }
 
   const canvasstyle = {
     zindex: 10,
-    width: 460,
-    height: 346,
+//    border: "1px solid #00ff00",
     position: "absolute",
-    marginLeft: "auto",
-    marginRight: "auto",
-    textAlign: "center",
+    borderRadius: "5px",
+    width: "98%",
+    height: "98%",
+    top: "1%",
+    left: "1%",
   }
 
   const cameraContainerStyle = {
-    height: "400px",
-    width: "500px",
+    margin: "0",
+    padding: "0",
+    height: "80vh",
+    width: "80vw",
+    textAlign: "center",
   }
 
-  const videoConstraints = {
-    facingMode: "user"
-  }  
+  const pushupStyle = {
+    position: "absolute",
+    top: "0",
+    left: "50%",
+    marginLeft: "-100px",
+    width: "200px",
+    textAlign: "center",
+    //marginRight: "auto",
+    color: "#ffaa00",
+  }
 
   const runPoseDetector = async () => {
     await tf.ready()
@@ -96,16 +108,13 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
     // Get Video Properties
     const video = webcamRef.current.video;
-    const videoWidth = webcamRef.current.video.videoWidth;
-    const videoHeight = webcamRef.current.video.videoHeight;
-
-    // Set video width
-    webcamRef.current.video.width = videoWidth;
-    webcamRef.current.video.height = videoHeight;
+    const videoWidth = video.videoWidth;
+    const videoHeight = video.videoHeight;
 
     // Set canvas height and width
     canvasRef.current.width = videoWidth;
-    canvasRef.current.height = videoHeight;    
+    canvasRef.current.height = videoHeight;   
+    //canvasRef.current.style.left = webcamRef.current.style.left; 
 
     const poses = await detector.estimatePoses(webcam.video);
     if(!poses) {
@@ -143,8 +152,12 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, videoWidth, videoHeight);
 
-    drawHand(ctx, poses[0].keypoints[5], poses[0].keypoints[7], poses[0].keypoints[9])
-    drawHand(ctx, poses[0].keypoints[6], poses[0].keypoints[8], poses[0].keypoints[10])
+    if(leftScoreTotal > 1.8) {
+      drawHand(ctx, leftShoulder, leftElbow, leftWrist);
+    }
+    if(rightScoreTotal > 1.8) {
+      drawHand(ctx, rightShoulder, rightElbow, rightWrist);
+    }
 
   }
 
@@ -160,20 +173,17 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   }, [])
 
   return (
-    <div>
-      <h1>Pushup Detector {!aiReady && ' - Loading...'}</h1>
-      <h2>COUNT: {pushupCount} PHASE: {phaseNames[pushUpPhase]}</h2>
-      <div id="camera" style={cameraContainerStyle}>
-        <Webcam 
-          ref={webcamRef}
-          style={webcamstyle} 
-          audio={false}
-          videoConstraints={videoConstraints}
-        />
-        <canvas 
-          ref={canvasRef} 
-          style={canvasstyle} />
-      </div>
+    <div id="camera" style={cameraContainerStyle}>
+      <Webcam 
+        ref={webcamRef}
+        style={webcamstyle} 
+        audio={false}
+        videoConstraints={{facingMode: "user"}}
+      />
+      <canvas 
+        ref={canvasRef} 
+        style={canvasstyle} />
+      <Typography variant="h1" style={pushupStyle}>{pushupCount}</Typography>
     </div>
   )
 }
