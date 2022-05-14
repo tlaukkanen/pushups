@@ -25,23 +25,19 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   const webcamstyle = {
     zindex: 9,
     position: "absolute",
-    borderRadius: "5px",
-    width: "98%",
-    height: "98%",
-    top: "1%",
-    left: "1%",
-//    border: "1px solid red",
+    width: "100vw",
+    height: "100vh",
+    top: 0,
+    left: 0,
   }
 
   const canvasstyle = {
     zindex: 10,
-//    border: "1px solid #00ff00",
     position: "absolute",
-    borderRadius: "5px",
-    width: "98%",
-    height: "98%",
-    top: "1%",
-    left: "1%",
+    width: "100vw",
+    height: "100vh",
+    top: 0,
+    left: 0,
   }
 
   const cameraContainerStyle = {
@@ -59,8 +55,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     marginLeft: "-100px",
     width: "200px",
     textAlign: "center",
-    //marginRight: "auto",
-    color: "#ffaa00",
+    color: "#E5CB9F",
   }
 
   const runPoseDetector = async () => {
@@ -74,7 +69,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
   const calculateHandAngle = (shoulderPos, elbowPos, wristPos) => {
     //find vector components
     var dAx = shoulderPos.x - elbowPos.x;
-    var dAy = shoulderPos.y - elbowPos.x;
+    var dAy = shoulderPos.y - elbowPos.y;
     var dBx = wristPos.x - elbowPos.x;
     var dBy = wristPos.y - elbowPos.y;
     var angle = Math.atan2(dAx * dBy - dAy * dBx, dAx * dBx + dAy * dBy);
@@ -83,16 +78,31 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     return degree_angle | 0;
   }
 
-  const drawHand = (ctx, shoulderPos, elbowPos, wristPos) => {
+  const calculateAngle = (posA, posB) => {
+    //find vector components
+    var dX = posA.x - posB.x;
+    var dY = posA.y - posB.y;
+
+    //find angle
+    var angle = Math.atan2(dX, dY);
+    if(angle < 0) {angle = angle * -1;}
+    var degree_angle = angle * (180 / Math.PI);
+    return degree_angle | 0;
+  }
+
+  const drawHand = (ctx, hipPos, shoulderPos, elbowPos, wristPos) => {
     ctx.beginPath();
-    ctx.strokeStyle = '#ff0000'
+    ctx.strokeStyle = '#ffcc00'
     ctx.lineWidth = 2
-    ctx.moveTo(shoulderPos.x, shoulderPos.y);
+    ctx.moveTo(hipPos.x, hipPos.y);
+    ctx.lineTo(shoulderPos.x, shoulderPos.y);
     ctx.lineTo(elbowPos.x, elbowPos.y);
     ctx.lineTo(wristPos.x, wristPos.y);
     ctx.stroke();
     ctx.closePath();
   }
+
+  
 
   const initSetup = async () => {
     const detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
@@ -113,8 +123,7 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
 
     // Set canvas height and width
     canvasRef.current.width = videoWidth;
-    canvasRef.current.height = videoHeight;   
-    //canvasRef.current.style.left = webcamRef.current.style.left; 
+    canvasRef.current.height = videoHeight;
 
     const poses = await detector.estimatePoses(webcam.video);
     if(!poses) {
@@ -137,15 +146,29 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     //console.log('angleLeft: ' + angleLeft + '/' + leftScoreTotal)
     //console.log('angleRight: ' + angleRight + '/' + rightScoreTotal)
 
-    if(((angleLeft > 130 && leftScoreTotal > 1.8) || 
-        (angleRight > 130 && rightScoreTotal > 1.8)) && 
-        pushUpPhaseRef.current === GOING_UP) {
-      setPushupCount(prevPushupCount => prevPushupCount + 1)
-      setPushUpPhase(GOING_DOWN)
-    } else if(((angleLeft < 110 && leftScoreTotal > 1.8) ||
-        (angleRight < 110 && rightScoreTotal > 1.8)) && 
-        pushUpPhaseRef.current === GOING_DOWN) {
-      setPushUpPhase(GOING_UP)
+    // Check spine angle
+    const leftHip = poses[0].keypoints[11];
+    const rightHip = poses[0].keypoints[12];
+    const leftHipAngle = calculateAngle(leftHip, leftShoulder);
+    const rightHipAngle = calculateAngle(rightHip, rightShoulder);
+    const leftHipScore = leftHip.score;
+    const rightHipScore = rightHip.score;
+
+    //console.log('leftHipAngle: ' + leftHipAngle + '/' + leftHipScore)
+    //console.log('rightHipAngle: ' + rightHipAngle + '/' + rightHipScore)
+    
+    if((leftHipScore > 0.5 && leftHipAngle > 40) ||
+      (rightHipScore > 0.5 && rightHipAngle > 40)) {
+      if(((angleLeft > 130 && leftScoreTotal > 1.8) || 
+          (angleRight > 130 && rightScoreTotal > 1.8)) && 
+          pushUpPhaseRef.current === GOING_UP) {
+        setPushupCount(prevPushupCount => prevPushupCount + 1)
+        setPushUpPhase(GOING_DOWN)
+      } else if(((angleLeft < 110 && leftScoreTotal > 1.8) ||
+          (angleRight < 110 && rightScoreTotal > 1.8)) && 
+          pushUpPhaseRef.current === GOING_DOWN) {
+        setPushUpPhase(GOING_UP)
+      }
     }
 
     // Draw on canvas
@@ -153,10 +176,10 @@ const PushupDetector = ({setPushupCount, pushupCount}) => {
     ctx.clearRect(0, 0, videoWidth, videoHeight);
 
     if(leftScoreTotal > 1.8) {
-      drawHand(ctx, leftShoulder, leftElbow, leftWrist);
+      drawHand(ctx, leftHip, leftShoulder, leftElbow, leftWrist);
     }
     if(rightScoreTotal > 1.8) {
-      drawHand(ctx, rightShoulder, rightElbow, rightWrist);
+      drawHand(ctx, rightHip, rightShoulder, rightElbow, rightWrist);
     }
 
   }

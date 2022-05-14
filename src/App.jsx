@@ -1,4 +1,6 @@
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Button, createMuiTheme, createTheme, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle,
   Fab, Grid, IconButton, makeStyles, MuiThemeProvider,
@@ -11,6 +13,8 @@ import DayTimeline from './components/DayTimeline'
 import store from 'store'
 import dayjs from 'dayjs'
 import EntryDialog from './components/EntryDialog'
+import ListIcon from '@material-ui/icons/List'
+import CalendarIcon from '@material-ui/icons/CalendarToday'
 
 /*
 Theme
@@ -29,19 +33,28 @@ Theme v2
 #300018
 */
 
+/*
+Theme v3
+#68A7AD
+#99C4C8
+#E5CB9F
+#EEE4AB
+
+*/
+
 
 
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#E5EDB8',
-      main: '#ADB85F',
+      light: '#99C4C8',
+      main: '#68A7AD',
       dark: '#300018',
       //contrastText: 
     },
     secondary: {
-      light: '#E5EDB8',
-      main: '#ADB85F',
+      light: '#99C4C8',
+      main: '#68A7AD',
     },
     text: {
       secondary: '#5A3D31',
@@ -56,8 +69,16 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     position: 'fixed',
     bottom: theme.spacing(3),
-    right: theme.spacing(3),
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 20
   },
+  navigation: {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    zIndex: 10,
+  }
 }))
 
 
@@ -103,6 +124,18 @@ function App() {
             />
           </Grid>
         </Grid>
+        <EntryDialog
+          entryDialogOpen={entryDialogOpen}
+          closeDialog={() => setEntryDialogOpen(false)}
+          handleEntry={(count) => handleEntry(count)}
+        />
+        <BottomNavigation
+          showLabels
+          className={classes.navigation}
+        >
+          <BottomNavigationAction label="Recent" icon={<ListIcon />} />
+          <BottomNavigationAction label="Stats" icon={<CalendarIcon />} />
+        </BottomNavigation>
         <Fab
           onClick={() => setEntryDialogOpen(true)}
           color="primary"
@@ -110,11 +143,6 @@ function App() {
         >
           <AddIcon />
         </Fab>
-        <EntryDialog
-          entryDialogOpen={entryDialogOpen}
-          closeDialog={() => setEntryDialogOpen(false)}
-          handleEntry={(count) => handleEntry(count)}
-        />
       </MuiThemeProvider>
     </>
   )
