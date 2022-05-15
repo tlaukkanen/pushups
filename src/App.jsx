@@ -1,4 +1,6 @@
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Button, createMuiTheme, createTheme, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle,
   Fab, Grid, IconButton, makeStyles, MuiThemeProvider,
@@ -8,9 +10,12 @@ import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import './App.css'
 import DayTimeline from './components/DayTimeline'
+import Stats from './components/Stats'
 import store from 'store'
 import dayjs from 'dayjs'
 import EntryDialog from './components/EntryDialog'
+import ListIcon from '@material-ui/icons/List'
+import CalendarIcon from '@material-ui/icons/CalendarToday'
 
 /*
 Theme
@@ -29,19 +34,27 @@ Theme v2
 #300018
 */
 
+/*
+Theme v3
+#68A7AD
+#99C4C8
+#E5CB9F
+#EEE4AB
+
+*/
 
 
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#E5EDB8',
-      main: '#ADB85F',
+      light: '#99C4C8',
+      main: '#68A7AD',
       dark: '#300018',
       //contrastText: 
     },
     secondary: {
-      light: '#E5EDB8',
-      main: '#ADB85F',
+      light: '#99C4C8',
+      main: '#68A7AD',
     },
     text: {
       secondary: '#5A3D31',
@@ -56,16 +69,27 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     position: 'fixed',
     bottom: theme.spacing(3),
-    right: theme.spacing(3),
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 20
   },
+  navigation: {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    zIndex: 10,
+  }
 }))
 
+const RECENT_VIEW = 0;
+const STATS_VIEW = 1;
 
 function App() {
   const classes = useStyles()
   const [count, setCount] = useState(0)
   const [entryDialogOpen, setEntryDialogOpen] = useState(false)
-  const [pushups, setPushups] = useState([])
+  const [pushups, setPushups] = useState()
+  const [currentView, setCurrentView] = useState(RECENT_VIEW)
 
   useEffect(() => {
     const data = store.get('data')
@@ -90,33 +114,54 @@ function App() {
   }
 
   return (
-    <>
-      <MuiThemeProvider theme={theme}>
-        <Grid container>
+    <MuiThemeProvider theme={theme}>
+      <Grid container>
+        {currentView === RECENT_VIEW &&
+        <>
           <Grid item xs={12}>
             <Typography variant='h6' style={{textAlign:'center'}}>Pushups Last 10 Days</Typography>
           </Grid>
           <Grid item xs={12}>
-            
             <DayTimeline 
               data={pushups}
             />
           </Grid>
-        </Grid>
-        <Fab
-          onClick={() => setEntryDialogOpen(true)}
-          color="primary"
-          className={classes.fab}
-        >
-          <AddIcon />
-        </Fab>
-        <EntryDialog
-          entryDialogOpen={entryDialogOpen}
-          closeDialog={() => setEntryDialogOpen(false)}
-          handleEntry={(count) => handleEntry(count)}
+        </>
+        }
+        {currentView === STATS_VIEW &&
+          <Grid item xs={12}>
+            <Stats />
+          </Grid>
+        }
+       </Grid>
+      <EntryDialog
+        entryDialogOpen={entryDialogOpen}
+        closeDialog={() => setEntryDialogOpen(false)}
+        handleEntry={(count) => handleEntry(count)}
+      />
+      <BottomNavigation
+        showLabels
+        className={classes.navigation}
+      >
+        <BottomNavigationAction
+          label="Recent"
+          icon={<ListIcon />} 
+          onClick={() => setCurrentView(RECENT_VIEW)}
         />
-      </MuiThemeProvider>
-    </>
+        <BottomNavigationAction
+          label="Stats"
+          icon={<CalendarIcon />}
+          onClick={() => setCurrentView(STATS_VIEW)}
+        />
+      </BottomNavigation>
+      <Fab
+        onClick={() => setEntryDialogOpen(true)}
+        color="primary"
+        className={classes.fab}
+      >
+        <AddIcon />
+      </Fab>
+    </MuiThemeProvider>
   )
 }
 

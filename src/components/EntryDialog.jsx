@@ -2,6 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Gr
 import React, { useState } from 'react'
 import PushupDetector from './PushupDetector'
 import CloseIcon from '@material-ui/icons/Close'
+import CameraIcon from '@material-ui/icons/CameraAlt'
 
 const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
   const [pushupCount, setPushupCount] = useState(0)
@@ -20,30 +21,16 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
     closeDialog()
   }  
 
-  const aiDialogStyle = {
-    textAlign: 'center',
-    margin: '0',
-    padding: '0',
-    fontFamily: 'monospace',
-  }
-
-  const aiCloseButtonStyle = {
-    position: 'fixed',
-    bottom: '0',
-    left: '50%',
-    marginBottom: '5px',
-    //width: '80px',
-    //height: '80px',
-    marginLeft: "-100px",
-    color: "#ffaa00",
-    width: '200px',
-  }
-
   const aiContainerStyle = {
-    height: '100%',
-    width: '100%',
+    position: 'fixed',
+    height: '100vh',
+    width: '100vw',
+    top: '0',
+    left: '0',
     margin: '0',
     padding: '0',
+    zIndex: 99999,
+    backgroundColor: 'white',
   }
 
   return (
@@ -52,7 +39,7 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
       <DialogContent>
         <Grid container spacing={3} alignItems='center'>
           <Grid item xs={12}>
-            <Typography variant='h5' style={{textAlign:'left'}}>How many push ups?</Typography>
+            <Typography variant='h5' style={{textAlign:'left'}}>How many pushups did you do?</Typography>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -70,8 +57,9 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
             <Button 
               variant="outlined"
               onClick={() => setShowAi(!showAi)}
+              startIcon={<CameraIcon />}
             >
-              Switch to AI camera pushup detector
+              Try smart pushup detector
             </Button>
           </Grid>
         </Grid>
@@ -85,31 +73,24 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
         </Button>
       </DialogActions>
     </Dialog>
-    <Dialog 
-      open={showAi} 
-      onClose={() => setShowAi(false)}
-      style={aiDialogStyle}
-    >
+    {showAi &&
       <div style={aiContainerStyle}>
         <PushupDetector
           pushupCount={pushupCount}
           setPushupCount={setPushupCount}
         />
-        <Box 
-          justifyItems={'center'}
-          style={aiCloseButtonStyle}
+        <Fab            
+          onClick={() => setShowAi(false)}
+          style={{
+            color: "#ffaa00",
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
         >
-          <Fab            
-            onClick={() => setShowAi(false)}
-            style={{
-              color: "#ffaa00",
-            }}
-          >
-            <CloseIcon />
-          </Fab>
-        </Box>
+          <CloseIcon />
+        </Fab>
       </div>
-    </Dialog>
+    }
     </>
   )
 }
