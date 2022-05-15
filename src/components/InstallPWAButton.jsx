@@ -8,6 +8,7 @@ const InstallPWAButton = () => {
   useEffect(() => {
     const handler = (event) => {
       event.preventDefault()
+      console.log("Before install prompt")
       setSupportsPWA(true)
       setPromptInstall(event)
     }

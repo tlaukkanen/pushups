@@ -9,12 +9,12 @@
       "type": "image/svg+xml"
     },
     {
-      "src": "icon_192x192.png",
+      "src": "pwa-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon_512x512.png",
+      "src": "pwa-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

@@ -88,7 +88,7 @@ function App() {
   const classes = useStyles()
   const [count, setCount] = useState(0)
   const [entryDialogOpen, setEntryDialogOpen] = useState(false)
-  const [pushups, setPushups] = useState([])
+  const [pushups, setPushups] = useState()
   const [currentView, setCurrentView] = useState(RECENT_VIEW)
 
   useEffect(() => {

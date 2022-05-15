@@ -108,9 +108,11 @@ export default function DayTimeline(props) {
 }
 
 DayTimeline.defaultProps = {
-  data: []
+  data: {}
 }
 
 DayTimeline.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.number),
+  data: PropTypes.objectOf(
+    PropTypes.any
+  ),
 }
