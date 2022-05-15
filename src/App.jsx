@@ -10,13 +10,12 @@ import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import './App.css'
 import DayTimeline from './components/DayTimeline'
+import Stats from './components/Stats'
 import store from 'store'
 import dayjs from 'dayjs'
 import EntryDialog from './components/EntryDialog'
 import ListIcon from '@material-ui/icons/List'
 import CalendarIcon from '@material-ui/icons/CalendarToday'
-import ReactPWAInstallProvider, { useReactPWAInstall } from 'react-pwa-install'
-import logo from '/icon_192x192.png'
 
 /*
 Theme
@@ -82,34 +81,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+const RECENT_VIEW = 0;
+const STATS_VIEW = 1;
 
 function App() {
   const classes = useStyles()
   const [count, setCount] = useState(0)
   const [entryDialogOpen, setEntryDialogOpen] = useState(false)
   const [pushups, setPushups] = useState([])
-  const { pwaInstall, supported, isInstalled } = useReactPWAInstall()
-
-  const handleInstallClick = () => {
-    if(!supported) {
-      alert('Your browser does not support PWA installation')
-      return
-    }
-    pwaInstall({
-      title: 'Pushups',
-      logo: logo,
-      features: (
-        <ul>
-          <li>Track your pushups</li>
-          <li>AI pushup counter</li>
-          <li>Progress statistics</li>
-        </ul>
-      ),
-      description: "Track your pushups and see how you progress over time",
-    })
-    .then(() => alert('Install successful'))
-    .catch(() => alert('Install failed'))
-  };
+  const [currentView, setCurrentView] = useState(RECENT_VIEW)
 
   useEffect(() => {
     const data = store.get('data')
@@ -134,44 +114,54 @@ function App() {
   }
 
   return (
-    <ReactPWAInstallProvider>
-      <MuiThemeProvider theme={theme}>
-        <Grid container>
+    <MuiThemeProvider theme={theme}>
+      <Grid container>
+        {currentView === RECENT_VIEW &&
+        <>
           <Grid item xs={12}>
             <Typography variant='h6' style={{textAlign:'center'}}>Pushups Last 10 Days</Typography>
           </Grid>
           <Grid item xs={12}>
-            
             <DayTimeline 
               data={pushups}
             />
           </Grid>
-        </Grid>
-        <EntryDialog
-          entryDialogOpen={entryDialogOpen}
-          closeDialog={() => setEntryDialogOpen(false)}
-          handleEntry={(count) => handleEntry(count)}
+        </>
+        }
+        {currentView === STATS_VIEW &&
+          <Grid item xs={12}>
+            <Stats />
+          </Grid>
+        }
+       </Grid>
+      <EntryDialog
+        entryDialogOpen={entryDialogOpen}
+        closeDialog={() => setEntryDialogOpen(false)}
+        handleEntry={(count) => handleEntry(count)}
+      />
+      <BottomNavigation
+        showLabels
+        className={classes.navigation}
+      >
+        <BottomNavigationAction
+          label="Recent"
+          icon={<ListIcon />} 
+          onClick={() => setCurrentView(RECENT_VIEW)}
         />
-        <BottomNavigation
-          showLabels
-          className={classes.navigation}
-        >
-          <BottomNavigationAction label="Recent" icon={<ListIcon />} />
-          <BottomNavigationAction
-            label="PWA test"
-            icon={<CalendarIcon />}
-            onClick={handleInstallClick}
-          />
-        </BottomNavigation>
-        <Fab
-          onClick={() => setEntryDialogOpen(true)}
-          color="primary"
-          className={classes.fab}
-        >
-          <AddIcon />
-        </Fab>
-      </MuiThemeProvider>
-    </ReactPWAInstallProvider>
+        <BottomNavigationAction
+          label="Stats"
+          icon={<CalendarIcon />}
+          onClick={() => setCurrentView(STATS_VIEW)}
+        />
+      </BottomNavigation>
+      <Fab
+        onClick={() => setEntryDialogOpen(true)}
+        color="primary"
+        className={classes.fab}
+      >
+        <AddIcon />
+      </Fab>
+    </MuiThemeProvider>
   )
 }
 
