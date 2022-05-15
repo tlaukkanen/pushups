@@ -20,6 +20,7 @@
     "prop-types": "^15.7.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-pwa-install": "^1.0.12",
     "react-webcam": "^7.0.1",
     "reactjs-localstorage": "^1.0.1",
     "store": "^2.0.12"

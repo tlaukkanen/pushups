@@ -15,6 +15,8 @@ import dayjs from 'dayjs'
 import EntryDialog from './components/EntryDialog'
 import ListIcon from '@material-ui/icons/List'
 import CalendarIcon from '@material-ui/icons/CalendarToday'
+import ReactPWAInstallProvider, { useReactPWAInstall } from 'react-pwa-install'
+import logo from '/icon_192x192.png'
 
 /*
 Theme
@@ -86,6 +88,28 @@ function App() {
   const [count, setCount] = useState(0)
   const [entryDialogOpen, setEntryDialogOpen] = useState(false)
   const [pushups, setPushups] = useState([])
+  const { pwaInstall, supported, isInstalled } = useReactPWAInstall()
+
+  const handleInstallClick = () => {
+    if(!supported) {
+      alert('Your browser does not support PWA installation')
+      return
+    }
+    pwaInstall({
+      title: 'Pushups',
+      logo: logo,
+      features: (
+        <ul>
+          <li>Track your pushups</li>
+          <li>AI pushup counter</li>
+          <li>Progress statistics</li>
+        </ul>
+      ),
+      description: "Track your pushups and see how you progress over time",
+    })
+    .then(() => alert('Install successful'))
+    .catch(() => alert('Install failed'))
+  };
 
   useEffect(() => {
     const data = store.get('data')
@@ -110,7 +134,7 @@ function App() {
   }
 
   return (
-    <>
+    <ReactPWAInstallProvider>
       <MuiThemeProvider theme={theme}>
         <Grid container>
           <Grid item xs={12}>
@@ -133,7 +157,11 @@ function App() {
           className={classes.navigation}
         >
           <BottomNavigationAction label="Recent" icon={<ListIcon />} />
-          <BottomNavigationAction label="Stats" icon={<CalendarIcon />} />
+          <BottomNavigationAction
+            label="PWA test"
+            icon={<CalendarIcon />}
+            onClick={handleInstallClick}
+          />
         </BottomNavigation>
         <Fab
           onClick={() => setEntryDialogOpen(true)}
@@ -143,7 +171,7 @@ function App() {
           <AddIcon />
         </Fab>
       </MuiThemeProvider>
-    </>
+    </ReactPWAInstallProvider>
   )
 }
 
