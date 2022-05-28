@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, Divider, Grid, makeStyles, Typography } from "@material-ui/core"
 import { 
   Timeline, TimelineConnector, TimelineContent,
@@ -24,18 +24,28 @@ const useStyles = makeStyles((theme) => ({
 export default function DayTimeline(props) {
   const classes = useStyles()
   const { data } = props
-  const days = [
-    dayjs().format('YYYYMMDD'),
-    dayjs().subtract(1, 'day').format('YYYYMMDD'),
-    dayjs().subtract(2, 'day').format('YYYYMMDD'),
-    dayjs().subtract(3, 'day').format('YYYYMMDD'),
-    dayjs().subtract(4, 'day').format('YYYYMMDD'),
-    dayjs().subtract(5, 'day').format('YYYYMMDD'),
-  ]
+  const [days, setDays] = useState([])
 
   const formatDay = (dayStamp) => (
     dayjs(dayStamp, 'YYYYMMDD').format('DD/MM/YYYY')
   )
+
+  const createDays = () => {
+    const newDays = [
+      dayjs().format('YYYYMMDD'),
+      dayjs().subtract(1, 'day').format('YYYYMMDD'),
+      dayjs().subtract(2, 'day').format('YYYYMMDD'),
+      dayjs().subtract(3, 'day').format('YYYYMMDD'),
+      dayjs().subtract(4, 'day').format('YYYYMMDD'),
+      dayjs().subtract(5, 'day').format('YYYYMMDD'),
+    ]
+    setDays(newDays)
+  }
+
+  useEffect(() => {
+    createDays()
+  }, [createDays])
+  
 
   const formatRelativeDay = (dayStamp) => {
     const now = dayjs()
@@ -67,7 +77,6 @@ export default function DayTimeline(props) {
     {dayjs(day, 'YYYYMMDD').format('dddd')}
     </Grid>
     <Grid xs={3}>
-    
       <Typography variant="body2">
       <b>{data[day] ? Math.max.apply(Math, data[day]) : 0}</b> max per set
       </Typography>
