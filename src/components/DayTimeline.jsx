@@ -31,24 +31,19 @@ export default function DayTimeline(props) {
   )
 
   const createDays = () => {
-    const newDays = [
-      dayjs().format('YYYYMMDD'),
-      dayjs().subtract(1, 'day').format('YYYYMMDD'),
-      dayjs().subtract(2, 'day').format('YYYYMMDD'),
-      dayjs().subtract(3, 'day').format('YYYYMMDD'),
-      dayjs().subtract(4, 'day').format('YYYYMMDD'),
-      dayjs().subtract(5, 'day').format('YYYYMMDD'),
-      dayjs().subtract(6, 'day').format('YYYYMMDD'),
-      dayjs().subtract(7, 'day').format('YYYYMMDD'),
-      dayjs().subtract(8, 'day').format('YYYYMMDD'),
-      dayjs().subtract(9, 'day').format('YYYYMMDD'),
-    ]
-    setDays(newDays)
+
+    // Create days for past 30 days
+    const pastDays = []
+    for (let i = 0; i < 30; i++) {
+      const dayStamp = dayjs().subtract(i, 'day').format('YYYYMMDD')
+      pastDays.push(dayStamp)
+    }
+    setDays(pastDays)
   }
 
   useEffect(() => {
     createDays()
-  }, [createDays])
+  }, [])
   
 
   const formatRelativeDay = (dayStamp) => {

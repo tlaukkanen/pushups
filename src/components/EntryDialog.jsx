@@ -9,7 +9,6 @@ const EntryDialog = ({entryDialogOpen, closeDialog, handleEntry}) => {
   const [showAi, setShowAi] = useState(false)
 
   const handleEnter = (e) => {
-    console.log(e.key)
     if (e.key === 'Enter') {
       onPushupCountSubmit()
     }

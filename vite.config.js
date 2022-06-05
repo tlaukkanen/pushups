@@ -6,6 +6,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     reactRefresh(),
-    VitePWA({}),
+    VitePWA({
+      workbox: {
+        cleanupOutdatedCaches: true,
+      }
+    }),
   ]
 })

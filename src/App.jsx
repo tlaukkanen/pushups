@@ -11,11 +11,14 @@ import AddIcon from '@material-ui/icons/Add'
 import './App.css'
 import DayTimeline from './components/DayTimeline'
 import Stats from './components/Stats'
+import Settings from './components/Settings'
 import store from 'store'
 import dayjs from 'dayjs'
 import EntryDialog from './components/EntryDialog'
 import ListIcon from '@material-ui/icons/List'
 import CalendarIcon from '@material-ui/icons/CalendarToday'
+import InfoIcon from '@material-ui/icons/Info'
+import SettingsIcon from '@material-ui/icons/Settings'
 
 /*
 Theme
@@ -68,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
   fab: {
     position: 'fixed',
-    bottom: theme.spacing(3),
+    bottom: theme.spacing(10),
     left: '50%',
     transform: 'translateX(-50%)',
     zIndex: 20
@@ -83,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RECENT_VIEW = 0;
 const STATS_VIEW = 1;
+const SETTINGS_VIEW = 2;
 
 function App() {
   const classes = useStyles()
@@ -119,7 +123,7 @@ function App() {
         {currentView === RECENT_VIEW &&
         <>
           <Grid item xs={12}>
-            <Typography variant='h6' style={{textAlign:'center'}}>Pushups Last 10 Days</Typography>
+            <Typography variant='h6' style={{textAlign:'center'}}>Last 30 Days</Typography>
           </Grid>
           <Grid item xs={12}>
             <DayTimeline 
@@ -131,6 +135,11 @@ function App() {
         {currentView === STATS_VIEW &&
           <Grid item xs={12}>
             <Stats />
+          </Grid>
+        }
+        {currentView === SETTINGS_VIEW &&
+          <Grid item xs={12}>
+            <Settings />
           </Grid>
         }
        </Grid>
@@ -153,14 +162,21 @@ function App() {
           icon={<CalendarIcon />}
           onClick={() => setCurrentView(STATS_VIEW)}
         />
+        <BottomNavigationAction
+          label="Settings"
+          icon={<SettingsIcon />}
+          onClick={() => setCurrentView(SETTINGS_VIEW)}
+        />
       </BottomNavigation>
-      <Fab
-        onClick={() => setEntryDialogOpen(true)}
-        color="primary"
-        className={classes.fab}
-      >
-        <AddIcon />
-      </Fab>
+      {currentView === RECENT_VIEW &&
+        <Fab
+          onClick={() => setEntryDialogOpen(true)}
+          color="primary"
+          className={classes.fab}
+        >
+          <AddIcon />
+        </Fab>
+      }
     </MuiThemeProvider>
   )
 }

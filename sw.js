@@ -1,4 +1,4 @@
-const cacheName = 'pushups-v1';
+const cacheName = 'pushups-v2';
 const contentToCache = [
   '/',
   '/index.html',
