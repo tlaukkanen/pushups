@@ -3,6 +3,10 @@
   "name": "Pushups",
   "description": "Pushups tracker with AI camera pushup detection",
   "scope": "/",
+  "background_color": "#68A7AD",
+  "theme_color": "#EEE4AB",
+  "start_url": "/?utm_source=pwa",
+  "display": "fullscreen",
   "icons": [
     {
       "src": "favicon.svg",
@@ -24,9 +28,5 @@
       "type": "image/png",
       "sizes": "512x512"
     }
-  ],
-  "start_url": "/?utm_source=pwa.",
-  "display": "fullscreen",
-  "theme_color": "#EEE4AB",
-  "background_color": "#68A7AD"
+  ]
 }
