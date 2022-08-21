@@ -81,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     width: '100%',
     zIndex: 10,
+  },
+  headerItem: {
+    backgroundColor: '#E5CB9F',
   }
 }))
 
@@ -122,7 +125,8 @@ function App() {
       <Grid container>
         {currentView === RECENT_VIEW &&
         <>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.headerItem}>
+            <Typography variant='h5' style={{textAlign:'center'}}>Your Pushups</Typography>
             <Typography variant='h6' style={{textAlign:'center'}}>Last 30 Days</Typography>
           </Grid>
           <Grid item xs={12}>
@@ -134,7 +138,9 @@ function App() {
         }
         {currentView === STATS_VIEW &&
           <Grid item xs={12}>
-            <Stats />
+            <Stats
+              data={pushups} 
+            />
           </Grid>
         }
         {currentView === SETTINGS_VIEW &&
